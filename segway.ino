@@ -101,6 +101,15 @@ float ypr[3];           // [yaw, pitch, roll]   yaw/pitch/roll container and gra
 // packet structure for InvenSense teapot demo
 uint8_t teapotPacket[14] = { '$', 0x02, 0,0, 0,0, 0,0, 0,0, 0x00, 0x00, '\r', '\n' };
 
+// ================================================================
+// ===                  MATH HELPER FUNCTION                    ===
+// ================================================================
+
+float getLeverArm(Quaternion *rot)   //indicates how far the center of gravity is from the axel
+{
+    return 2*(rot->w*rot->y-rot->x*rot->z);
+}
+
 
 
 // ================================================================
@@ -228,7 +237,12 @@ void loop() {
         mpu.dmpGetGyro(&gyro, fifoBuffer);
         //mpu.dmpGetGravity(&gravity, &q);
         //mpu.dmpGetEuler(euler, &q);
-        Serial.print("quat\t");
+        float leverArm = getLeverArm(&q);
+        Serial.print("lever arm\t");
+        Serial.print(leverArm);
+        Serial.print("\tangvel\t");
+        Serial.println(gyro.y);
+        /*Serial.print("quat\t");
         Serial.print(q.w);
         Serial.print("\t");
         Serial.print(q.x);
@@ -242,7 +256,7 @@ void loop() {
         Serial.print(gyro.y);
         Serial.print("\t");
         Serial.println(gyro.z);
-        /*Serial.print("gravity\t");
+        Serial.print("gravity\t");
         Serial.print(gravity.x);
         Serial.print("\t");
         Serial.print(gravity.y);
