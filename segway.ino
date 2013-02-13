@@ -45,40 +45,15 @@ MPU6050 mpu;
    digital I/O pin 2.
  * ========================================================================= */
 
-// uncomment "OUTPUT_READABLE_QUATERNION" if you want to see the actual
-// quaternion components in a [w, x, y, z] format (not best for parsing
-// on a remote host such as Processing or something though)
-//#define OUTPUT_READABLE_QUATERNION
-
-// uncomment "OUTPUT_READABLE_EULER" if you want to see Euler angles
-// (in degrees) calculated from the quaternions coming from the FIFO.
-// Note that Euler angles suffer from gimbal lock (for more info, see
-// http://en.wikipedia.org/wiki/Gimbal_lock)
-//#define OUTPUT_READABLE_EULER
-
-// uncomment "OUTPUT_READABLE_YAWPITCHROLL" if you want to see the yaw/
-// pitch/roll angles (in degrees) calculated from the quaternions coming
-// from the FIFO. Note this also requires gravity vector calculations.
-// Also note that yaw/pitch/roll angles suffer from gimbal lock (for
-// more info, see: http://en.wikipedia.org/wiki/Gimbal_lock)
-//#define OUTPUT_READABLE_YAWPITCHROLL
-
-// uncomment "OUTPUT_READABLE_REALACCEL" if you want to see acceleration
-// components with gravity removed. This acceleration reference frame is
-// not compensated for orientation, so +X is always +X according to the
-// sensor, just without the effects of gravity. If you want acceleration
-// compensated for orientation, us OUTPUT_READABLE_WORLDACCEL instead.
-//#define OUTPUT_READABLE_REALACCEL
-
-// uncomment "OUTPUT_READABLE_WORLDACCEL" if you want to see acceleration
-// components with gravity removed and adjusted for the world frame of
-// reference (yaw is relative to initial orientation, since no magnetometer
-// is present in this case). Could be quite handy in some cases.
-//#define OUTPUT_READABLE_WORLDACCEL
-
-// uncomment "OUTPUT_TEAPOT" if you want output that matches the
-// format used for the InvenSense teapot demo
-//#define OUTPUT_TEAPOT
+//set the pins for the motor controllers
+#define LCW  4
+#define LCCW 6
+#define LBRK 8
+#define LADJ 10
+#define RCW  5
+#define RCCW 7
+#define RBRK 9
+#define RADJ 11
 
 // MPU control/status vars
 bool dmpReady = false;  // set true if DMP init was successful
@@ -110,7 +85,33 @@ float getLeverArm(Quaternion *rot)   //indicates how far the center of gravity i
     return 2*(rot->w*rot->y-rot->x*rot->z);
 }
 
+// ================================================================
+// ===                  MOTOR CONTROL HELPER                    ===
+// ================================================================
 
+void setMotorSpeed(bool left, int speed)
+{
+    int cw, ccw, brk, adj;
+    cw  = left?LCW:RCW;
+    ccw = left?LCCW:RCCW;
+    adj = left?LADJ:RADJ;
+    if (speed == 0)
+    {
+        digitalWrite(cw,HIGH);
+        digitalWrite(ccw,HIGH);
+    }
+    else if (speed > 0)
+    {
+        digitalWrite(cw,LOW);
+        digitalWrite(ccw,HIGH);
+    }
+    else //speed <0
+    {
+        digitalWrite(cw,HIGH);
+        digitalWrite(ccw,LOW);
+    }
+    analogWrite(adj,abs(speed));
+}
 
 // ================================================================
 // ===               INTERRUPT DETECTION ROUTINE                ===
@@ -180,6 +181,15 @@ void setup() {
         Serial.print(devStatus);
         Serial.println(F(")"));
     }
+
+    pinMode(LCW, OUTPUT);
+    pinMode(LCCW, OUTPUT);
+    pinMode(LBRK, OUTPUT);
+    pinMode(LADJ, OUTPUT);
+    pinMode(RCW, OUTPUT);
+    pinMode(RCCW, OUTPUT);
+    pinMode(RBRK, OUTPUT);
+    pinMode(RADJ, OUTPUT);
 }
 
 
