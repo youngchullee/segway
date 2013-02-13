@@ -95,6 +95,8 @@ void setMotorSpeed(bool left, int speed)
     cw  = left?LCW:RCW;
     ccw = left?LCCW:RCCW;
     adj = left?LADJ:RADJ;
+
+    analogWrite(adj,abs(speed));
     if (speed == 0)
     {
         digitalWrite(cw,HIGH);
@@ -102,15 +104,14 @@ void setMotorSpeed(bool left, int speed)
     }
     else if (speed > 0)
     {
-        digitalWrite(cw,LOW);
         digitalWrite(ccw,HIGH);
+        digitalWrite(cw,LOW);
     }
     else //speed <0
     {
         digitalWrite(cw,HIGH);
         digitalWrite(ccw,LOW);
     }
-    analogWrite(adj,abs(speed));
 }
 
 // ================================================================
@@ -190,6 +191,12 @@ void setup() {
     pinMode(RCCW, OUTPUT);
     pinMode(RBRK, OUTPUT);
     pinMode(RADJ, OUTPUT);
+
+    //set braking to on and initialize motor speed to 0.
+    digitalWrite(LBRK,LOW);
+    digitalWrite(RBRK,LOW);
+    setMotorSpeed(false, 0);
+    setMotorSpeed(true, 0);
 }
 
 
@@ -278,5 +285,8 @@ void loop() {
         Serial.print(aa.y);
         Serial.print("\t");
         Serial.println(aa.z);
+
+        setMotorSpeed(true,255*leverArm);
+        setMotorSpeed(false,-255*leverArm);
     }
 }
