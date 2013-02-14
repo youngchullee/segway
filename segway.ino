@@ -49,7 +49,7 @@ MPU6050 mpu;
 #define LCW  4
 #define LCCW 6
 #define LBRK 8
-#define LADJ 10
+#define LADJ 12
 #define RCW  5
 #define RCCW 7
 #define RBRK 9
