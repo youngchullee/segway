@@ -49,7 +49,7 @@ MPU6050 mpu;
 #define LCW  4
 #define LCCW 6
 #define LBRK 8
-#define LADJ 12
+#define LADJ 3
 #define RCW  5
 #define RCCW 7
 #define RBRK 9
@@ -105,11 +105,13 @@ void setMotorSpeed(bool left, int speed)
     else if (speed > 0)
     {
         digitalWrite(ccw,HIGH);
+        delay(1);
         digitalWrite(cw,LOW);
     }
     else //speed <0
     {
         digitalWrite(cw,HIGH);
+        delay(1);
         digitalWrite(ccw,LOW);
     }
 }
