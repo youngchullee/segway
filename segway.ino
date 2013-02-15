@@ -76,6 +76,10 @@ float ypr[3];           // [yaw, pitch, roll]   yaw/pitch/roll container and gra
 // packet structure for InvenSense teapot demo
 uint8_t teapotPacket[14] = { '$', 0x02, 0,0, 0,0, 0,0, 0,0, 0x00, 0x00, '\r', '\n' };
 
+int sgn(int val) {
+    return (0 < val) - (val < 0);
+}
+
 // ================================================================
 // ===                  MATH HELPER FUNCTION                    ===
 // ================================================================
@@ -288,7 +292,7 @@ void loop() {
         Serial.print("\t");
         Serial.println(aa.z);
 
-        setMotorSpeed(true,255*leverArm);
-        setMotorSpeed(false,-255*leverArm);
+        setMotorSpeed(true,255*sgn(leverArm)*sqrt(abs(leverArm)));
+        setMotorSpeed(false,-255*sgn(leverArm)*sqrt(abs(leverArm)));
     }
 }
