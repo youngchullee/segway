@@ -82,7 +82,7 @@ uint8_t teapotPacket[14] = { '$', 0x02, 0,0, 0,0, 0,0, 0,0, 0x00, 0x00, '\r', '\
 
 float getLeverArm(Quaternion *rot)   //indicates how far the center of gravity is from the axel
 {
-    return 2*(rot->w*rot->y-rot->x*rot->z);
+    return 2*(rot->w*rot->x+rot->y*rot->z);
 }
 
 // ================================================================
