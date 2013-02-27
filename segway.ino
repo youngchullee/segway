@@ -46,14 +46,14 @@ MPU6050 mpu;
  * ========================================================================= */
 
 //set the pins for the motor controllers
-#define LCW  4
-#define LCCW 6
-#define LBRK 8
-#define LADJ 3
-#define RCW  5
-#define RCCW 7
-#define RBRK 9
-#define RADJ 11
+#define LCW  4  //org
+#define LCCW 6  //wht-org
+#define LBRK 8  //wht-blu
+#define LADJ 3  //blu(grn tip)
+#define RCW  5  //org
+#define RCCW 7  //wht-org
+#define RBRK 9  //wht-blu
+#define RADJ 11 //blu
 
 // MPU control/status vars
 bool dmpReady = false;  // set true if DMP init was successful
@@ -153,10 +153,10 @@ void setup() {
     Serial.println(mpu.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
 
     // wait for ready
-    Serial.println(F("\nSend any character to begin DMP programming and demo: "));
+    /*Serial.println(F("\nSend any character to begin DMP programming and demo: "));
     while (Serial.available() && Serial.read()); // empty buffer
     while (!Serial.available());                 // wait for data
-    while (Serial.available() && Serial.read()); // empty buffer again
+    while (Serial.available() && Serial.read());*/ // empty buffer again
 
     // load and configure the DMP
     Serial.println(F("Initializing DMP..."));
@@ -292,7 +292,9 @@ void loop() {
         Serial.print("\t");
         Serial.println(aa.z);
 
-        setMotorSpeed(true,255*sgn(leverArm)*sqrt(abs(leverArm)));
-        setMotorSpeed(false,-255*sgn(leverArm)*sqrt(abs(leverArm)));
+        //setMotorSpeed(true,255*sgn(leverArm)*sqrt(abs(leverArm)));
+        //setMotorSpeed(false,-255*sgn(leverArm)*sqrt(abs(leverArm)));
+        setMotorSpeed(true,255*leverArm);
+        setMotorSpeed(false,-255*leverArm);
     }
 }
