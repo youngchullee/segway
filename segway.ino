@@ -49,11 +49,15 @@ MPU6050 mpu;
 #define LCW  4  //org
 #define LCCW 6  //wht-org
 #define LBRK 8  //wht-blu
-#define LADJ 3  //blu(grn tip)
+#define LADJ 10 //blu
 #define RCW  5  //org
 #define RCCW 7  //wht-org
 #define RBRK 9  //wht-blu
 #define RADJ 11 //blu
+//error signals (may not be used)
+#define LERR 12 //wht-brn
+#define RERR 13 //wht-brn
+// COM/GND is brn
 
 // MPU control/status vars
 bool dmpReady = false;  // set true if DMP init was successful
@@ -197,6 +201,9 @@ void setup() {
     pinMode(RCCW, OUTPUT);
     pinMode(RBRK, OUTPUT);
     pinMode(RADJ, OUTPUT);
+
+    pinMode(LERR, INPUT);
+    pinMode(RERR, INPUT);
 
     //set braking to on and initialize motor speed to 0.
     digitalWrite(LBRK,LOW);
